@@ -1,0 +1,373 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="hero">
+
+    <div class="container">
+
+        <div class="row align-items-center g-5 w-100">
+
+            <!-- LEFT SIDE: WELCOME MESSAGE -->
+            <div class="col-lg-7">
+
+                <p class="eyebrow">
+                    Welcome to better healthcare access
+                </p>
+
+                <h1>
+                    Find the right doctor.
+                    <br>
+                    Book with confidence.
+                </h1>
+
+                <p class="lead mt-4">
+                    Discover available specialists, choose a
+                    convenient appointment time, and manage
+                    your healthcare visits — all in one place.
+                </p>
+
+
+                <!-- BUTTONS -->
+                <div class="d-flex flex-wrap gap-3 mt-4">
+
+                    <a
+                        class="btn btn-light btn-lg fw-bold"
+                        href="{% url 'doctors' %}"
+                    >
+                        Find a Doctor →
+                    </a>
+
+                    <a
+                        class="btn btn-outline-light btn-lg"
+                        href="{% url 'insurance_info' %}"
+                    >
+                        Explore Insurance
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- RIGHT SIDE: HERO VISUAL -->
+            <div class="col-lg-5">
+
+                <div class="hero-visual">
+
+                    <div class="hero-circle">
+
+                        <span class="hero-symbol">
+                            ✚
+                        </span>
+
+                    </div>
+
+
+                    <!-- FLOATING NOTES -->
+                    <div class="floating-note note-one">
+                        ✓ Easy online booking
+                    </div>
+
+                    <div class="floating-note note-two">
+                        ◷ Flexible schedules
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FEATURES SECTION -->
+<section class="section">
+
+    <div class="container">
+
+        <p class="eyebrow text-center">
+            Simple, accessible, connected
+        </p>
+
+        <h2 class="section-title text-center mb-5">
+            Everything you need for your next visit
+        </h2>
+
+
+        <!-- FEATURES ROW -->
+        <div class="row g-4">
+
+            <!-- FEATURE 1: FIND SPECIALIST -->
+            <div class="col-md-4">
+
+                <div class="soft-card p-4 h-100">
+
+                    <div class="feature-icon">
+                        ♙
+                    </div>
+
+                    <h4>
+                        Find your specialist
+                    </h4>
+
+                    <p class="muted">
+                        Browse doctors by medical specialty
+                        and see who is available.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- FEATURE 2: BOOK APPOINTMENT -->
+            <div class="col-md-4">
+
+                <div class="soft-card p-4 h-100">
+
+                    <div class="feature-icon">
+                        ▦
+                    </div>
+
+                    <h4>
+                        Book an appointment
+                    </h4>
+
+                    <p class="muted">
+                        Choose an open time slot and confirm
+                        your booking online.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- FEATURE 3: MANAGE CARE -->
+            <div class="col-md-4">
+
+                <div class="soft-card p-4 h-100">
+
+                    <div class="feature-icon">
+                        ✧
+                    </div>
+
+                    <h4>
+                        Manage your care
+                    </h4>
+
+                    <p class="muted">
+                        View appointments, insurance notes
+                        and doctor rescheduling updates.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- POPULAR SPECIALTIES SECTION -->
+<section class="section" style="background:#eef8f7">
+
+    <div class="container">
+
+        <!-- SECTION HEADING -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+
+                <p class="eyebrow">
+                    Explore care
+                </p>
+
+                <h2 class="section-title">
+                    Popular specialties
+                </h2>
+
+            </div>
+
+
+            <!-- VIEW ALL DOCTORS -->
+            <a
+                href="{% url 'doctors' %}"
+                class="btn btn-outline-teal"
+            >
+                View all doctors →
+            </a>
+
+        </div>
+
+
+        <!-- SPECIALTIES GRID -->
+        <div class="row g-3">
+
+            {% for specialty in specialties %}
+
+                <div class="col-sm-6 col-lg-4">
+
+                    <a
+                        class="specialty-card"
+                        href="{% url 'doctors' %}?specialty={{ specialty.id }}"
+                    >
+
+                        <!-- SPECIALTY ICON -->
+                        <span style="font-size:1.8rem">
+                            ✚
+                        </span>
+
+
+                        <!-- SPECIALTY NAME -->
+                        <h5 class="mt-3">
+                            {{ specialty.name }}
+                        </h5>
+
+
+                        <!-- EXPLORE LINK TEXT -->
+                        <small class="muted">
+                            Explore doctors →
+                        </small>
+
+                    </a>
+
+                </div>
+
+
+            <!-- IF NO SPECIALTIES EXIST -->
+            {% empty %}
+
+                <div class="col-12">
+
+                    <p>
+                        Add specialties through Django Admin
+                        or run the demo seed command.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- HOW IT WORKS SECTION -->
+<section class="section">
+
+    <div class="container">
+
+        <div class="row align-items-center g-5">
+
+            <!-- LEFT SIDE: INTRODUCTION -->
+            <div class="col-md-6">
+
+                <p class="eyebrow">
+                    How it works
+                </p>
+
+                <h2 class="section-title">
+                    Healthcare appointments in three steps
+                </h2>
+
+                <p class="muted">
+                    Less time on phone calls, more control
+                    over your schedule.
+                </p>
+
+            </div>
+
+
+            <!-- RIGHT SIDE: STEPS -->
+            <div class="col-md-6">
+
+                <!-- STEP 1 -->
+                <div class="d-flex gap-3 mb-3">
+
+                    <div class="step-number">
+                        01
+                    </div>
+
+                    <div>
+
+                        <h5>
+                            Choose a specialty
+                        </h5>
+
+                        <p class="muted">
+                            Search for the doctor you need,
+                            or ask our specialty assistant.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 2 -->
+                <div class="d-flex gap-3 mb-3">
+
+                    <div class="step-number">
+                        02
+                    </div>
+
+                    <div>
+
+                        <h5>
+                            Pick an available slot
+                        </h5>
+
+                        <p class="muted">
+                            See open appointments and book
+                            your preferred time.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 3 -->
+                <div class="d-flex gap-3">
+
+                    <div class="step-number">
+                        03
+                    </div>
+
+                    <div>
+
+                        <h5>
+                            Track your appointment
+                        </h5>
+
+                        <p class="muted">
+                            Check your dashboard for booking
+                            and schedule updates.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,69 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- PAGE HEADING -->
+<section class="page-heading">
+
+    <div class="container">
+
+        <p class="eyebrow">
+            Join MediQueue
+        </p>
+
+        <h1>
+            Create Patient Account
+        </h1>
+
+    </div>
+
+</section>
+
+
+<!-- MAIN SECTION -->
+<section class="section">
+
+    <div class="container">
+
+        <!-- REGISTRATION CARD -->
+        <div
+            class="soft-card p-4 mx-auto"
+            style="max-width:600px"
+        >
+
+            <!-- REGISTRATION FORM -->
+            <form method="post">
+
+                {% csrf_token %}
+
+                <!-- DJANGO REGISTRATION FIELDS -->
+                {{ form.as_p }}
+
+
+                <!-- CREATE ACCOUNT BUTTON -->
+                <button class="btn btn-teal w-100">
+                    Create Account
+                </button>
+
+            </form>
+
+
+            <!-- LOGIN LINK -->
+            <p class="text-center mt-3 mb-0">
+
+                Already registered?
+
+                <a href="{% url 'login' %}">
+                    Log in
+                </a>
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

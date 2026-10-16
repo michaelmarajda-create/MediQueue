@@ -1,0 +1,328 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- PAGE HEADING -->
+<section class="page-heading">
+
+    <div class="container">
+
+        <p class="eyebrow">Our specialists</p>
+
+        <h1>Find a Doctor</h1>
+
+        <p class="muted mb-0">
+            Explore available doctors and choose the care you need.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- MAIN SECTION -->
+<section class="section">
+
+    <div class="container">
+
+        <div class="row g-4">
+
+            <!-- LEFT SIDE: AI SEARCH AND FILTERS -->
+            <div class="col-lg-4">
+
+                <!-- AI-ASSISTED SEARCH -->
+                <div class="soft-card p-4 mb-4">
+
+                    <span class="tag">
+                        ✧ AI-assisted search
+                    </span>
+
+                    <h4 class="mt-3">
+                        Not sure which specialty?
+                    </h4>
+
+                    <p class="muted">
+                        Describe what type of specialist you need.
+                        This assistant is not a diagnosis tool.
+                    </p>
+
+
+                    <!-- AI SEARCH FORM -->
+                    <form id="ai-form">
+
+                        {% csrf_token %}
+
+                        <label
+                            for="ai-text"
+                            class="form-label fw-semibold"
+                        >
+                            Your request
+                        </label>
+
+                        <textarea
+                            id="ai-text"
+                            class="form-control mb-3"
+                            rows="3"
+                            maxlength="500"
+                            placeholder="e.g. I need a doctor for knee pain"
+                        ></textarea>
+
+                        <button class="btn btn-teal w-100">
+                            Suggest Specialty
+                        </button>
+
+                    </form>
+
+
+                    <!-- AI RESULT -->
+                    <div
+                        id="ai-result"
+                        class="mt-3"
+                        aria-live="polite"
+                    ></div>
+
+                </div>
+
+
+                <!-- FILTER BY SPECIALTY -->
+                <div class="soft-card p-4">
+
+                    <h5>Filter by specialty</h5>
+
+                    <form method="get">
+
+                        <select
+                            name="specialty"
+                            id="specialty-filter"
+                            class="form-select mb-3"
+                        >
+
+                            <option value="">
+                                All specialties
+                            </option>
+
+
+                            {% for s in specialties %}
+
+                                <option
+                                    value="{{ s.id }}"
+                                    {% if selected == s.id|stringformat:'s' %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ s.name }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+
+                        <button class="btn btn-outline-teal w-100">
+                            Apply Filter
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+            <!-- RIGHT SIDE: AVAILABLE DOCTORS -->
+            <div class="col-lg-8">
+
+                <div class="d-flex align-items-center justify-content-between mb-3">
+
+                    <h3 class="section-title mb-0">
+                        Available doctors
+                    </h3>
+
+                    <span class="muted">
+                        {{ doctors|length }} doctors
+                    </span>
+
+                </div>
+
+
+                <!-- DOCTORS GRID -->
+                <div class="row g-3">
+
+                    {% for doctor in doctors %}
+
+                        <div class="col-md-6">
+
+                            <div class="soft-card p-4 h-100 d-flex flex-column">
+
+                                <!-- DOCTOR AVATAR -->
+                                <div class="doctor-avatar mb-3">
+                                    ⚕
+                                </div>
+
+
+                                <!-- DOCTOR SPECIALTY -->
+                                <span class="tag align-self-start">
+                                    {{ doctor.specialty.name }}
+                                </span>
+
+
+                                <!-- DOCTOR NAME -->
+                                <h4 class="mt-3">
+                                    {{ doctor }}
+                                </h4>
+
+
+                                <!-- DOCTOR BIOGRAPHY -->
+                                <p class="muted flex-grow-1">
+
+                                    {{ doctor.bio|default:'Helping patients access quality care.' }}
+
+                                </p>
+
+
+                                <!-- VIEW AVAILABLE TIMES -->
+                                <a
+                                    class="btn btn-teal"
+                                    href="{% url 'doctor_slots' doctor.id %}"
+                                >
+                                    View Available Times →
+                                </a>
+
+                            </div>
+
+                        </div>
+
+
+                    <!-- IF NO DOCTORS FOUND -->
+                    {% empty %}
+
+                        <div class="col-12">
+
+                            <div class="soft-card p-4">
+
+                                No doctors found.
+                                Try another specialty or add demo
+                                doctors in the admin.
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- AI SEARCH JAVASCRIPT -->
+<script>
+
+    document.getElementById('ai-form').addEventListener(
+        'submit',
+        async function(e) {
+
+            // PREVENT PAGE REFRESH
+            e.preventDefault();
+
+
+            // GET RESULT ELEMENT
+            const result = document.getElementById('ai-result');
+
+            result.textContent = 'Finding a suitable specialty...';
+
+
+            // PREPARE FORM DATA
+            const data = new FormData();
+
+            data.append(
+                'message',
+                document.getElementById('ai-text').value
+            );
+
+
+            try {
+
+                // SEND REQUEST TO DJANGO AI API
+                const response = await fetch(
+                    '{% url "ai_api" %}',
+                    {
+                        method: 'POST',
+
+                        headers: {
+                            'X-CSRFToken': document.querySelector(
+                                '[name=csrfmiddlewaretoken]'
+                            ).value
+                        },
+
+                        body: data
+                    }
+                );
+
+
+                // CHECK RESPONSE
+                if (!response.ok) {
+                    throw Error('Request failed');
+                }
+
+
+                // CONVERT RESPONSE TO JSON
+                const answer = await response.json();
+
+
+                // DISPLAY AI RESPONSE
+                result.textContent = answer.message;
+
+
+                // CHECK IF AI FOUND A SPECIALTY
+                if (answer.specialty) {
+
+                    const options = [
+                        ...document.getElementById(
+                            'specialty-filter'
+                        ).options
+                    ];
+
+
+                    // FIND MATCHING SPECIALTY
+                    const match = options.find(
+                        option => option.text === answer.specialty
+                    );
+
+
+                    // SELECT MATCHING SPECIALTY
+                    if (match) {
+
+                        document.getElementById(
+                            'specialty-filter'
+                        ).value = match.value;
+
+
+                        result.textContent +=
+                            ' — Click Apply Filter to view doctors.';
+
+                    }
+
+                }
+
+            } catch (err) {
+
+                // DISPLAY ERROR IF AI IS UNAVAILABLE
+                result.textContent =
+                    'Assistant unavailable. Please select a specialty manually.';
+
+            }
+
+        }
+    );
+
+</script>
+
+{% endblock %}

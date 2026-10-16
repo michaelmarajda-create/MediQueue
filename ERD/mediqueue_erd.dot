@@ -1,0 +1,16 @@
+digraph ERD { graph [rankdir=LR,bgcolor="white",nodesep=.7,ranksep=1.1,splines=polyline]; node [shape=record,fontname="Helvetica",fontsize=11,style="filled",fillcolor="#eaf5fb",color="#246789"]; edge [color="#4d6475",fontname="Helvetica",fontsize=10];
+User [label="{auth_user|PK id : integer\lusername : varchar\lemail : varchar\lpassword : varchar\l}"];
+PatientProfile [label="{PatientProfile|PK id\lFK user_id (UNIQUE)\lphone\lFK insurance_id (nullable)\l}"];
+Insurance [label="{Insurance|PK id\lname\lcoverage_notes\l}"];
+Specialty [label="{Specialty|PK id\lname\l}"];
+Doctor [label="{Doctor|PK id\lFK user_id (UNIQUE)\lFK specialty_id\lbio\l}"];
+Slot [label="{Slot|PK id\lFK doctor_id\lstarts_at\lends_at\l}"];
+Appointment [label="{Appointment|PK id\lFK patient_id\lFK slot_id (UNIQUE)\lstatus\lreason\lcreated_at\l}"];
+User -> PatientProfile [label="1 : 0..1"];
+Insurance -> PatientProfile [label="1 : many"];
+User -> Doctor [label="1 : 0..1"];
+Specialty -> Doctor [label="1 : many"];
+Doctor -> Slot [label="1 : many"];
+Slot -> Appointment [label="1 : 0..1"];
+User -> Appointment [label="1 : many"];
+}

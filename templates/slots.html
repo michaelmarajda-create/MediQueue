@@ -1,0 +1,126 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- PAGE HEADING -->
+<section class="page-heading">
+
+    <div class="container">
+
+        <p class="eyebrow">
+            Book your visit
+        </p>
+
+        <!-- DOCTOR NAME -->
+        <h1>
+            {{ doctor }}
+        </h1>
+
+        <!-- DOCTOR SPECIALTY -->
+        <span class="tag">
+            {{ doctor.specialty.name }}
+        </span>
+
+    </div>
+
+</section>
+
+
+<!-- MAIN SECTION -->
+<section class="section">
+
+    <div class="container">
+
+        <!-- SECTION HEADING -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h2 class="section-title">
+                Available appointment times
+            </h2>
+
+            <!-- BACK TO DOCTORS BUTTON -->
+            <a
+                class="btn btn-outline-teal"
+                href="{% url 'doctors' %}"
+            >
+                ← Back to doctors
+            </a>
+
+        </div>
+
+
+        <!-- AVAILABLE APPOINTMENTS GRID -->
+        <div class="row g-3">
+
+            {% for slot in slots %}
+
+                <!-- APPOINTMENT CARD -->
+                <div class="col-sm-6 col-lg-4">
+
+                    <div class="soft-card p-4 h-100">
+
+                        <!-- AVAILABILITY STATUS -->
+                        <span class="tag mb-3">
+                            Available
+                        </span>
+
+
+                        <!-- APPOINTMENT DATE -->
+                        <h5>
+                            {{ slot.starts_at|date:'l, F j, Y' }}
+                        </h5>
+
+
+                        <!-- APPOINTMENT TIME -->
+                        <p class="muted">
+                            ◷ {{ slot.starts_at|date:'H:i' }}
+                            –
+                            {{ slot.ends_at|date:'H:i' }}
+                        </p>
+
+
+                        <!-- BOOKING FORM -->
+                        <form
+                            method="post"
+                            action="{% url 'book' slot.id %}"
+                        >
+
+                            {% csrf_token %}
+
+
+                            <!-- CONFIRM BOOKING BUTTON -->
+                            <button class="btn btn-teal w-100">
+                                Confirm Booking
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+
+            <!-- IF NO AVAILABLE APPOINTMENTS EXIST -->
+            {% empty %}
+
+                <div class="col-12">
+
+                    <div class="soft-card p-4">
+
+                        No open times at the moment.
+                        Please check another doctor.
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

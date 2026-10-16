@@ -1,0 +1,77 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- PAGE HEADING -->
+<section class="page-heading">
+
+    <div class="container">
+
+        <p class="eyebrow">
+            My account
+        </p>
+
+        <h1>
+            Patient Profile
+        </h1>
+
+        <p class="muted">
+            Update your contact and insurance selection.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- MAIN SECTION -->
+<section class="section">
+
+    <div class="container">
+
+        <!-- PATIENT PROFILE CARD -->
+        <div
+            class="soft-card p-4 mx-auto"
+            style="max-width:600px"
+        >
+
+            <!-- EDIT PROFILE FORM -->
+            <form method="post">
+
+                {% csrf_token %}
+
+                <!-- DJANGO FORM FIELDS -->
+                {{ form.as_p }}
+
+
+                <!-- SAVE CHANGES BUTTON -->
+                <button class="btn btn-teal">
+                    Save Changes
+                </button>
+
+
+                <!-- CANCEL BUTTON -->
+                <a
+                    href="{% url 'dashboard' %}"
+                    class="btn btn-outline-secondary"
+                >
+                    Cancel
+                </a>
+
+            </form>
+
+
+            <!-- INSURANCE DISCLAIMER -->
+            <small class="muted d-block mt-3">
+                Plan selection does not verify
+                active insurance coverage.
+            </small>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
